@@ -13,6 +13,8 @@ class MovingCirclesScene: SKScene, ObservableObject { //SKScene for SpriteKit sc
     var square: SKSpriteNode! // make a sprite kit model of my "shot" ! has to do with unwrapping/wrapping, making sure it isn't nil (which it shouldn't ever be so I used the !)
     var isSquareMoving = false // originally it needs to be stationary at the top
     
+    @Published var score: Int = 0 // initialize score
+    
     func respawnSquare() { // function to respawn the square once it has finished being "shot"
         isSquareMoving = false
         let respawnAction = SKAction.move(to: CGPoint(x: size.width / 2, y: size.height - 30), duration: 0) // use an action to remove the square back to the top instead of constantly spawning new squares (lag, which it already lags a bit)
@@ -54,17 +56,18 @@ class MovingCirclesScene: SKScene, ObservableObject { //SKScene for SpriteKit sc
     }
     
     func checkForCollisions() {
-        for circle in circles { // for each circle
+        for circle in circles { //for each circle
             if circle.intersects(square) { // if it interacts with the square, remove it
                 circle.removeFromParent() // spritekit remove from the scene
                 
                 if let index = circles.firstIndex(of: circle) {
                     circles.remove(at: index) // remove it at the position of the circle in the row
                 }
+                
+                updateScore(for: circle.fillColor) //update the score based on the color of the circle
             }
         }
     }
-    
     
     func createAndMoveCircle(rowY: CGFloat, column: Int, moveLeft: Bool, color: UIColor) { // create the circles and let them move
         let circle = SKShapeNode(circleOfRadius: 20)
@@ -113,6 +116,22 @@ class MovingCirclesScene: SKScene, ObservableObject { //SKScene for SpriteKit sc
         circles.append(circle) // we have to keep track of the circles or else we cannot remove them so push them to an array
     }
     
+    func updateScore(for color: UIColor) { //new
+        switch color {
+        case UIColor.red:
+            score += 100
+        case UIColor.green:
+            score += 150
+        case UIColor.blue:
+            score += 200
+        case UIColor.yellow:
+            score += 250
+            break
+        default:
+            break
+        }
+        print("Score: \(score)")
+    }
+    
     var circles: [SKShapeNode] = [] //define the array
 }
-

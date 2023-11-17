@@ -12,12 +12,16 @@ class GameViewModel: ObservableObject {
     @Published var selectedPiece: Piece?
     @Published var lastSwappedPiece: Piece?
     
+    @Published var score: Int = 0
+    @Published var canScore: Bool = false
+    
     init(rows: Int, columns: Int) {
         initializeGameBoard(rows: rows, columns: columns) // initiatize with pieces in the rows and columns
         
         while hasMatches() {
             initializeGameBoard(rows: rows, columns: columns) // keep instantiating until the board has no matches at the beginning
         }
+        canScore = true
     }
     
     func initializeGameBoard(rows: Int, columns: Int) { // function to instantiate random pieces on the board
@@ -31,6 +35,8 @@ class GameViewModel: ObservableObject {
             }
             gameBoard.append(row) // append that as well, one for each row and column
         }
+        
+        score = 0
     }
     
     func checkMatchesAroundLastSwappedPiece() { // looks around the piece that swap
@@ -142,14 +148,28 @@ class GameViewModel: ObservableObject {
         
         if matchingVertical.count >= 3 { // if it is true, and there is a match present, then we need to remove the matches in the column
             removeMatches(at: matchingVertical, in: column, isColumnMatch: true)
+            if canScore {
+                print(matchingVertical.count)
+                updateScore(for: typeToMatch, count: matchingVertical.count)
+            }
         }
         
         if matchingHorizontal.count >= 3 { // if it is true, and there is a match present, then we need to remove the matches in the row
             removeMatches(at: matchingHorizontal, in: row, isColumnMatch: false)
+            if canScore {
+                print(matchingHorizontal.count)
+                updateScore(for: typeToMatch, count: matchingHorizontal.count)
+            }
         }
         
         return matchingVertical.count >= 3 || matchingHorizontal.count >= 3 // return whether that is true or false
     }
+    
+    func updateScore(for pieceType: PieceType, count: Int) {
+            let pieceScore = pieceType.score * count
+            score += pieceScore
+            print(score)
+        }
     
     func removeMatches(at positions: [Int], in row: Int, isColumnMatch: Bool) { // remove
         if positions.isEmpty { // if youre removing empty stuff then obviously that cant happen
