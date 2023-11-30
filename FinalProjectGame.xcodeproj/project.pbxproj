@@ -20,6 +20,7 @@
 		8E5535F92AEAF41400CF0C3A /* FinalProjectGameUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5535F82AEAF41400CF0C3A /* FinalProjectGameUITestsLaunchTests.swift */; };
 		8E5536082AEAFCF900CF0C3A /* Piece.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5536072AEAFCF900CF0C3A /* Piece.swift */; };
 		8E55360A2AEB1AB700CF0C3A /* GameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5536092AEB1AB700CF0C3A /* GameViewModel.swift */; };
+		8E77ABCF2B18F85200C42876 /* Circle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E77ABCE2B18F85200C42876 /* Circle.swift */; };
 		8EA29F9B2AEC66B400BD4E19 /* CellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA29F9A2AEC66B400BD4E19 /* CellView.swift */; };
 /* End PBXBuildFile section */
 
@@ -58,6 +59,7 @@
 		8E5535F82AEAF41400CF0C3A /* FinalProjectGameUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinalProjectGameUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		8E5536072AEAFCF900CF0C3A /* Piece.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Piece.swift; sourceTree = "<group>"; };
 		8E5536092AEB1AB700CF0C3A /* GameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewModel.swift; sourceTree = "<group>"; };
+		8E77ABCE2B18F85200C42876 /* Circle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Circle.swift; sourceTree = "<group>"; };
 		8EA29F9A2AEC66B400BD4E19 /* CellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -112,6 +114,7 @@
 				8E5535DA2AEAF41300CF0C3A /* FinalProjectGameApp.swift */,
 				8E5535DC2AEAF41300CF0C3A /* ContentView.swift */,
 				8E5536072AEAFCF900CF0C3A /* Piece.swift */,
+				8E77ABCE2B18F85200C42876 /* Circle.swift */,
 				8E5536092AEB1AB700CF0C3A /* GameViewModel.swift */,
 				8EA29F9A2AEC66B400BD4E19 /* CellView.swift */,
 				8E29236D2AFD98FE002C22CC /* GameViewModelCircles.swift */,
@@ -285,6 +288,7 @@
 				8E2923782AFEF09E002C22CC /* NavBar.swift in Sources */,
 				8E29236E2AFD98FE002C22CC /* GameViewModelCircles.swift in Sources */,
 				8E2923762AFD9DEF002C22CC /* MenuView.swift in Sources */,
+				8E77ABCF2B18F85200C42876 /* Circle.swift in Sources */,
 				8E5536082AEAFCF900CF0C3A /* Piece.swift in Sources */,
 				8E5535DD2AEAF41300CF0C3A /* ContentView.swift in Sources */,
 				8E2923702AFD9C1A002C22CC /* CircleView.swift in Sources */,

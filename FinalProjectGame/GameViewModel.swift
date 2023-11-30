@@ -15,6 +15,9 @@ class GameViewModel: ObservableObject {
     @Published var score: Int = 0
     @Published var canScore: Bool = false
     
+    @Published var powerUpCount: Int = 0
+    let maxPowerUps: Int = 3
+    
     init(rows: Int, columns: Int) {
         initializeGameBoard(rows: rows, columns: columns) // initiatize with pieces in the rows and columns
         

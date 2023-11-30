@@ -12,13 +12,14 @@ struct Piece: Identifiable, Equatable {
     let color: Color
     let type: PieceType
     let score: Int
-    
+    var hasPowerUp: Bool
     
     init(id: UUID = UUID(), type: PieceType) {
         self.id = id
         self.type = type
         self.color = type.color
         self.score = type.score
+        self.hasPowerUp = type.hasPowerUp
     }
 }
 
@@ -43,6 +44,15 @@ enum PieceType {
         case .type2: return 150
         case .type3: return 200
         case .none: return 0
+        }
+    }
+    
+    var hasPowerUp: Bool {
+        switch self {
+        case .type1, .type2, .type3:
+            return false // Set to true if you want all types to have power-up, modify as needed
+        case .none:
+            return false
         }
     }
 }

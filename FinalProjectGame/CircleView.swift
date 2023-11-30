@@ -5,11 +5,13 @@
 //  Created by CUBS Customer on 11/9/23.
 //
 
+
+//updated to include the Circle.swift / GameCircle struct :)
 import SwiftUI
 import SpriteKit
 
+
 class MovingCirclesScene: SKScene, ObservableObject { //SKScene for SpriteKit scene
-    let allColors: [UIColor] = [.red, .green, .blue, .yellow] // i wanted an array of colors for another mechanic i will introduce in the coming weeks
     var square: SKSpriteNode! // make a sprite kit model of my "shot" ! has to do with unwrapping/wrapping, making sure it isn't nil (which it shouldn't ever be so I used the !)
     var isSquareMoving = false // originally it needs to be stationary at the top
     
@@ -17,6 +19,7 @@ class MovingCirclesScene: SKScene, ObservableObject { //SKScene for SpriteKit sc
     
     func respawnSquare() { // function to respawn the square once it has finished being "shot"
         isSquareMoving = false
+        
         let respawnAction = SKAction.move(to: CGPoint(x: size.width / 2, y: size.height - 30), duration: 0) // use an action to remove the square back to the top instead of constantly spawning new squares (lag, which it already lags a bit)
         square.run(respawnAction) // apply this to the square
     }
@@ -43,10 +46,11 @@ class MovingCirclesScene: SKScene, ObservableObject { //SKScene for SpriteKit sc
         for row in 0..<5 { // for loop for instantiating the rows of circles
             let rowY = size.height - topMargin - CGFloat(row * 100)
             let moveLeft = row % 2 == 0 // this piece determines whether the row will be moving left or right
-            let shuffledColors = allColors.shuffled() // makes sure the colors are random
-            for i in 0..<10 { //for loop for the circles now
-                let color = shuffledColors[i % 4] //assigns the colors
-                createAndMoveCircle(rowY: rowY, column: i, moveLeft: moveLeft, color: color) // creates the row
+            
+            for i in 0..<10 { // for loop for the circles now
+                let circleType: [CircleType] = [.type1, .type2, .type3, .type4] // assign types of GameCircle
+                let randomType = circleType.randomElement() ?? .type1 // default to type1 as our none
+                createAndMoveCircle(rowY: rowY, column: i, moveLeft: moveLeft, circleType: randomType) // create the row
             }
         }
     }
@@ -56,23 +60,23 @@ class MovingCirclesScene: SKScene, ObservableObject { //SKScene for SpriteKit sc
     }
     
     func checkForCollisions() {
-        for circle in circles { //for each circle
-            if circle.intersects(square) { // if it interacts with the square, remove it
-                circle.removeFromParent() // spritekit remove from the scene
-                
-                if let index = circles.firstIndex(of: circle) {
-                    circles.remove(at: index) // remove it at the position of the circle in the row
-                }
-                
-                updateScore(for: circle.fillColor) //update the score based on the color of the circle
+        for (index, circle) in circles.enumerated() { // for each circle
+            let circleNode = children[index] as? SKShapeNode // let the circle = this one
+            
+            if circleNode?.intersects(square) ?? false { // check to see if it collides with square
+                circleNode?.removeFromParent() // remove it if so
+                circles.remove(at: index) // remove the circle at specific index from the array
+                updateScore(for: circle) // update score :)
             }
         }
     }
     
-    func createAndMoveCircle(rowY: CGFloat, column: Int, moveLeft: Bool, color: UIColor) { // create the circles and let them move
+    func createAndMoveCircle(rowY: CGFloat, column: Int, moveLeft: Bool, circleType: CircleType) { // create the circles and let them move
+        
         let circle = SKShapeNode(circleOfRadius: 20)
         
         let initialXPosition: CGFloat
+        
         if moveLeft {
             initialXPosition = size.width + CGFloat(column * 150)
         } else {
@@ -80,7 +84,7 @@ class MovingCirclesScene: SKScene, ObservableObject { //SKScene for SpriteKit sc
         }
         
         circle.position = CGPoint(x: initialXPosition, y: rowY)
-        circle.fillColor = color
+        circle.fillColor = UIColor(circleType.color)
         
         addChild(circle)
         //setup ^^
@@ -113,25 +117,17 @@ class MovingCirclesScene: SKScene, ObservableObject { //SKScene for SpriteKit sc
         let repeatAction = SKAction.repeatForever(moveAction)
         circle.run(repeatAction)
         
-        circles.append(circle) // we have to keep track of the circles or else we cannot remove them so push them to an array
+        let gameCircle = GameCircle(type: circleType)
+        circles.append(gameCircle) // we have to keep track of the circles or else we cannot remove them so push them to an array
     }
     
-    func updateScore(for color: UIColor) { //new
-        switch color {
-        case UIColor.red:
-            score += 100
-        case UIColor.green:
-            score += 150
-        case UIColor.blue:
-            score += 200
-        case UIColor.yellow:
-            score += 250
-            break
-        default:
-            break
-        }
-        print("Score: \(score)")
+    func updateScore(for circleType: GameCircle) {
+        let circleScore = circleType.score
+        score += circleScore
+        print(score)
     }
     
-    var circles: [SKShapeNode] = [] //define the array
+    //var circles: [SKShapeNode] = [] //define the array
+    var circles: [GameCircle] = [] //new
 }
+
