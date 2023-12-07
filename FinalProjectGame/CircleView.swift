@@ -17,6 +17,18 @@ class MovingCirclesScene: SKScene, ObservableObject { //SKScene for SpriteKit sc
     
     @Published var score: Int = 0 // initialize score
     
+    @Published var scores2: [ScoreData2] = []
+        
+    @Published var playerName: String = ""
+    @Published var scoreDate: String = ""
+    
+    struct ScoreData2: Codable, Identifiable {
+        var id = UUID()
+        var playerName: String
+        var score: Int
+        var scoreDate: String
+    }
+    
     func respawnSquare() { // function to respawn the square once it has finished being "shot"
         isSquareMoving = false
         
@@ -35,6 +47,7 @@ class MovingCirclesScene: SKScene, ObservableObject { //SKScene for SpriteKit sc
     }
     
     override func didMove(to view: SKView) { // override function is constantly going because the scene is in view
+        
         backgroundColor = .white
         
         let topMargin: CGFloat = 125 // some space between the shot and the circles
@@ -125,6 +138,40 @@ class MovingCirclesScene: SKScene, ObservableObject { //SKScene for SpriteKit sc
         let circleScore = circleType.score
         score += circleScore
         print(score)
+    }
+    
+    func saveScores(newScore: Int, playerName: String, scoreDate: String) { // same function
+        print("saving scores ball edition")
+
+        let newScoreData = ScoreData2(playerName: playerName, score: newScore, scoreDate: scoreDate)
+
+        scores2.append(newScoreData)
+
+        let encodedScores = try? JSONEncoder().encode(scores2)
+        UserDefaults.standard.set(encodedScores, forKey: "gameScores2")
+    }
+
+    //func loadScores() {
+        //if let savedScores = UserDefaults.standard.array(forKey: "gameScores") as? [Int] {
+            //scores = savedScores
+        //} else {
+            //scores = [] // Initialize scores as an empty array if there are no saved scores yet
+            //print("No scores")
+        //}
+    //}
+    func loadScores() { // same function just copy pasted
+        if let savedScoresData = UserDefaults.standard.data(forKey: "gameScores2") {
+            do {
+                scores2 = try JSONDecoder().decode([ScoreData2].self, from: savedScoresData)
+                print("Loaded scores:", scores2)
+            } catch {
+                print("Error decoding scores:", error)
+                scores2 = []
+            }
+        } else {
+            scores2 = []
+            print("No scores")
+        }
     }
     
     //var circles: [SKShapeNode] = [] //define the array

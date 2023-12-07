@@ -17,6 +17,18 @@ class GameViewModel: ObservableObject {
     
     @Published var powerUpCount: Int = 0
     let maxPowerUps: Int = 3
+
+    @Published var scores: [ScoreData] = []
+        
+    @Published var playerName: String = ""
+    @Published var scoreDate: String = ""
+    
+    struct ScoreData: Codable, Identifiable {
+        var id = UUID()
+        var playerName: String
+        var score: Int
+        var scoreDate: String
+    }
     
     init(rows: Int, columns: Int) {
         initializeGameBoard(rows: rows, columns: columns) // initiatize with pieces in the rows and columns
@@ -25,6 +37,7 @@ class GameViewModel: ObservableObject {
             initializeGameBoard(rows: rows, columns: columns) // keep instantiating until the board has no matches at the beginning
         }
         canScore = true
+        loadScores() // making sure to constantly update the scores
     }
     
     func initializeGameBoard(rows: Int, columns: Int) { // function to instantiate random pieces on the board
@@ -198,6 +211,44 @@ class GameViewModel: ObservableObject {
                     return // end
                 }
             }
+        }
+    }
+    
+    //func saveScores(newScore: Int) {
+        //scores.append(newScore)
+        //UserDefaults.standard.set(scores, forKey: "gameScores")
+    //}
+    func saveScores(newScore: Int, playerName: String, scoreDate: String) { // save score function including the information from alerts
+        print("saving scores")
+
+        let newScoreData = ScoreData(playerName: playerName, score: newScore, scoreDate: scoreDate) // let the new instantiation of the struct include this data with the data being input it when we call saveScore() after the alert is confirmed
+
+        scores.append(newScoreData) // append to the array of scoreData structs
+
+        let encodedScores = try? JSONEncoder().encode(scores) // JSON it since it is a struct, break it into pieces
+        UserDefaults.standard.set(encodedScores, forKey: "gameScores") // store the encoded pieces into the UserDefaults
+    }
+
+    //func loadScores() {
+        //if let savedScores = UserDefaults.standard.array(forKey: "gameScores") as? [Int] {
+            //scores = savedScores
+        //} else {
+            //scores = [] // Initialize scores as an empty array if there are no saved scores yet
+            //print("No scores")
+        //}
+    //}
+    func loadScores() {
+        if let savedScoresData = UserDefaults.standard.data(forKey: "gameScores") { // the key is KEY here to make sure it pulls up the correct set of data
+            do {
+                scores = try JSONDecoder().decode([ScoreData].self, from: savedScoresData) // decode the list of information in the JSON, split it into pieces
+                print("Loaded scores:", scores) // list of scores
+            } catch {
+                print("Error decoding scores:", error)
+                scores = []
+            }
+        } else {
+            scores = []
+            print("No scores")
         }
     }
 }

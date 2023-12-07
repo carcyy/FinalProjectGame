@@ -16,6 +16,12 @@ struct NavBar3: View {
     @State private var timerSeconds = 30
     @State private var timer: Timer?
     
+    @State private var showingAlert = false
+    @State private var isMenuViewPresented = false
+    @State private var name = ""
+    @State private var date = ""
+    @State private var whichGame = 0
+    
     let isNavBarVisible: Int
     
     init(isNavBarVisible: Int) {
@@ -57,24 +63,24 @@ struct NavBar3: View {
                         .cornerRadius(10)
                     
                     GeometryReader { geometry in
-                                SpriteView(scene: {
-                                    viewModel2.scene.size = CGSize(width: geometry.size.width, height: geometry.size.height)
-                                    viewModel2.scene.scaleMode = .fill
-                                    return viewModel2.scene
-                                }())
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                .aspectRatio(contentMode: .fit)
-                                .padding(10)
-                            }
-
-
-                            Text("Time Remaining: \(timerSeconds) seconds")
-                                .foregroundColor(.white)
-                                .padding()
-                                .background(timerSeconds > 0 ? Color.blue : Color.red)
-                                .cornerRadius(10)
-                        }
+                        SpriteView(scene: {
+                            viewModel2.scene.size = CGSize(width: geometry.size.width, height: geometry.size.height)
+                            viewModel2.scene.scaleMode = .fill
+                            return viewModel2.scene
+                        }())
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .aspectRatio(contentMode: .fit)
+                        .padding(10)
                     }
+                    
+                    
+                    Text("Time Remaining: \(timerSeconds) seconds")
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(timerSeconds > 0 ? Color.blue : Color.red)
+                        .cornerRadius(10)
+                }
+            }
         }
         .onAppear {
             startTimer()
@@ -83,11 +89,34 @@ struct NavBar3: View {
             timer?.invalidate()
             timer = nil
         }
-        .fullScreenCover(isPresented: $timer0) {
+        .fullScreenCover(isPresented: $isMenuViewPresented) {
             NavigationView {
                 MenuView()
             }
         }
+        .alert("Enter Highscore Details:", isPresented: $showingAlert) 
+        {
+            TextField("Enter your name:", text: $name)
+            TextField("Enter the date:", text: $date)
+                    Button("OK", action: submit)
+                } message: {
+                    Text("")
+                }
+    }
+    
+    public func submit() {
+        print("You entered \(name) + \(date)")
+        //showingAlert.toggle()
+        if(whichGame == 1)
+        {
+            viewModel.saveScores(newScore: viewModel.score, playerName: name, scoreDate: date)
+        }
+        else if(whichGame == 2)
+        {
+            viewModel2.scene.saveScores(newScore: viewModel2.scene.score, playerName: name, scoreDate: date)
+        }
+        
+        isMenuViewPresented.toggle()
     }
     
     private func startTimer() {
@@ -97,6 +126,14 @@ struct NavBar3: View {
             } else {
                 timer.invalidate()
                 timer0 = true
+                
+                if isNavBarVisible == 1 {
+                    whichGame = 1
+                    showingAlert.toggle()
+                } else if isNavBarVisible == 2 {
+                    whichGame = 2
+                    showingAlert.toggle()
+                }
             }
         }
     }

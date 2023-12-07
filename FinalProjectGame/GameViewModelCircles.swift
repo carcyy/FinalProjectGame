@@ -13,6 +13,7 @@ class GameViewModelCircles: ObservableObject { // this just literally instantiat
     
     init() {
         self.scene = MovingCirclesScene()
+        scene.loadScores() // to reload the new scores added everytime
     }
 }
 // i dont think it needed to be split like this but helps for clarity sake

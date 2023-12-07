@@ -26,7 +26,19 @@ struct MenuView: View {
                             NavigationLink(destination: {
                                 NavBar3(isNavBarVisible: x)
                             }, label: {
-                                Text("Level Type \(x)")
+                                if (x == 1)
+                                {
+                                    Text("Match 3+")
+                                        .font(.title)
+                                        .fontWeight(.bold)
+                                        .padding()
+                                }
+                                else {
+                                    Text("Ball Drop")
+                                        .font(.title)
+                                        .fontWeight(.bold)
+                                        .padding()
+                                }
                             })
                         }
                     }
@@ -39,7 +51,7 @@ struct MenuView: View {
                 .padding()
                 
                 
-                Button("Open Store") {
+                Button("Highscores") {
                     isStoreVisible.toggle()
                 }
                 .foregroundColor(.white)
@@ -55,11 +67,77 @@ struct MenuView: View {
 }
 
 struct StoreView: View {
+    @ObservedObject var viewModel = GameViewModel(rows: 8, columns: 8) //references
+    @ObservedObject var viewModel2 = GameViewModelCircles()
+    
+    @State private var game1Visibility = false // variable that shows which game
+    @State private var game2Visibility = false
+    
     var body: some View {
-        Text("Welcome to the Store!")
+        VStack {
+            Text("Highscores")
+                .font(.title)
+                .fontWeight(.bold)
+                .padding()
+            
+            Button("Match 3+ Highscore List") {
+                game1Visibility = true
+                game2Visibility = false
+            }
+            .foregroundColor(.white)
             .padding()
-        Text("Hoping to eventually figure out power-ups otherwise this will turn into a scoreboard.")
+            .background(Color.purple)
+            .cornerRadius(10)
+            Button("Ball Drop Highscore List") {
+                game2Visibility = true
+                game1Visibility = false
+            }
+            .foregroundColor(.white)
+            .padding()
+            .background(Color.teal)
+            .cornerRadius(10)
+            
+            if(game1Visibility == true && game2Visibility == false) // if in reference to game 1, display game 1 scores
+            {
+                List(viewModel.scores, id: \.self) { scoreData in
+                    Text("User: \(scoreData.playerName), Score: \(scoreData.score), Date: \(scoreData.scoreDate)")
+                }
+            }
+            else if(game2Visibility == true && game1Visibility == false) // if in reference to game 2, display game 2 scores
+            {
+                List(viewModel2.scene.scores2, id: \.self) { scoreData2 in
+                    Text("User: \(scoreData2.playerName), Score: \(scoreData2.score), Date: \(scoreData2.scoreDate)")
+                }
+            }
+        }
     }
 }
 
+extension GameViewModel.ScoreData: Hashable { //make them hashable so i can reference them in a list
+    static func == (lhs: GameViewModel.ScoreData, rhs: GameViewModel.ScoreData) -> Bool {
+        return lhs.playerName == rhs.playerName &&
+               lhs.score == rhs.score &&
+               lhs.scoreDate == rhs.scoreDate
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(playerName)
+        hasher.combine(score)
+        hasher.combine(scoreDate)
+    }
+}
+
+extension MovingCirclesScene.ScoreData2: Hashable { //make them hashable so i can reference them in a list
+    static func == (lhs: MovingCirclesScene.ScoreData2, rhs: MovingCirclesScene.ScoreData2) -> Bool {
+        return lhs.playerName == rhs.playerName &&
+               lhs.score == rhs.score &&
+               lhs.scoreDate == rhs.scoreDate
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(playerName)
+        hasher.combine(score)
+        hasher.combine(scoreDate)
+    }
+}
 
