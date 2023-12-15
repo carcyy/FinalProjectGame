@@ -9,6 +9,8 @@ import SwiftUI
 import SpriteKit
 
 struct NavBar3: View {
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
     @StateObject var viewModel = GameViewModel(rows: 8, columns: 8)
     @StateObject var viewModel2 = GameViewModelCircles()
     
@@ -19,7 +21,6 @@ struct NavBar3: View {
     @State private var showingAlert = false
     @State private var isMenuViewPresented = false
     @State private var name = ""
-    @State private var date = ""
     @State private var whichGame = 0
     
     let isNavBarVisible: Int
@@ -33,10 +34,14 @@ struct NavBar3: View {
             if isNavBarVisible == 1 { // ---------------
                 VStack {
                     Text("Score: \(viewModel.score)")
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(Color.red)
+                        .foregroundColor(Color("ColorPink"))
+                        .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+                        .background(Color.white)
                         .cornerRadius(10)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color("ColorPink"), lineWidth: 5)
+                        )
                     
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 5), count: viewModel.gameBoard.isEmpty ? 0 : viewModel.gameBoard[0].count), spacing: 5) {
                         ForEach(viewModel.gameBoard.indices, id: \.self) { rowIndex in
@@ -50,36 +55,49 @@ struct NavBar3: View {
                     
                     Text("Time Remaining: \(timerSeconds) seconds")
                         .foregroundColor(.white)
-                        .padding()
-                        .background(timerSeconds > 0 ? Color.blue : Color.red)
+                        .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+                        .background(timerSeconds > 0 ? Color.teal : Color("ColorPink"))
                         .cornerRadius(10)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.white, lineWidth: 5)
+                        )
                 }
             } else if isNavBarVisible == 2 { // ------------
                 VStack {
                     Text("Score: \(viewModel2.scene.score)")
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(Color.red)
+                        .foregroundColor(Color("ColorPink"))
+                        .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+                        .background(Color.white)
                         .cornerRadius(10)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color("ColorPink"), lineWidth: 5)
+                        )
                     
                     GeometryReader { geometry in
                         SpriteView(scene: {
-                            viewModel2.scene.size = CGSize(width: geometry.size.width, height: geometry.size.height)
+                            viewModel2.scene.size = CGSize(width: geometry.size.width + 350, height: geometry.size.height + 450)
                             viewModel2.scene.scaleMode = .fill
                             return viewModel2.scene
                         }())
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .aspectRatio(contentMode: .fit)
-                        .padding(10)
+                        //.padding(50)
                     }
                     
                     
                     Text("Time Remaining: \(timerSeconds) seconds")
                         .foregroundColor(.white)
-                        .padding()
-                        .background(timerSeconds > 0 ? Color.blue : Color.red)
+                        .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+                        .background(timerSeconds > 0 ? Color.teal : Color("ColorPink"))
                         .cornerRadius(10)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.white, lineWidth: 5)
+                        )
                 }
+                .background(Color("ColorBack"))
             }
         }
         .onAppear {
@@ -89,34 +107,45 @@ struct NavBar3: View {
             timer?.invalidate()
             timer = nil
         }
-        .fullScreenCover(isPresented: $isMenuViewPresented) {
-            NavigationView {
-                MenuView()
+        //.fullScreenCover(isPresented: $isMenuViewPresented) {
+            //NavigationView {
+            //MenuView()
+            //}
+        //}
+        .alert("Enter Highscore Details:", isPresented: $showingAlert) {
+            VStack {
+                TextField("Enter your name:", text: $name)
             }
+
+            Button("OK", action: {
+                submit()
+                self.presentationMode.wrappedValue.dismiss()
+            })
+            .disabled(name.isEmpty)
         }
-        .alert("Enter Highscore Details:", isPresented: $showingAlert) 
-        {
-            TextField("Enter your name:", text: $name)
-            TextField("Enter the date:", text: $date)
-                    Button("OK", action: submit)
-                } message: {
-                    Text("")
-                }
+    }
+        
+    public func dateCheck() -> String {
+        let currentDate = Date()
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM-dd-YY"
+        let dateString = dateFormatter.string(from: currentDate)
+
+        return dateString
     }
     
     public func submit() {
-        print("You entered \(name) + \(date)")
+        print("You entered \(name) + \(dateCheck())")
         //showingAlert.toggle()
         if(whichGame == 1)
         {
-            viewModel.saveScores(newScore: viewModel.score, playerName: name, scoreDate: date)
+            viewModel.saveScores(newScore: viewModel.score, playerName: name, scoreDate: dateCheck())
         }
         else if(whichGame == 2)
         {
-            viewModel2.scene.saveScores(newScore: viewModel2.scene.score, playerName: name, scoreDate: date)
+            viewModel2.scene.saveScores(newScore: viewModel2.scene.score, playerName: name, scoreDate: dateCheck())
         }
-        
-        isMenuViewPresented.toggle()
     }
     
     private func startTimer() {

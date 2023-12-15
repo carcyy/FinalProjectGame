@@ -48,16 +48,16 @@ class MovingCirclesScene: SKScene, ObservableObject { //SKScene for SpriteKit sc
     
     override func didMove(to view: SKView) { // override function is constantly going because the scene is in view
         
-        backgroundColor = .white
+        backgroundColor = UIColor(named: "ColorBack") ?? UIColor.white // this is the game background color (this took forever to find)
         
-        let topMargin: CGFloat = 125 // some space between the shot and the circles
+        let topMargin: CGFloat = 200 // some space between the shot and the circles
         
         square = SKSpriteNode(color: .black, size: CGSize(width: 15, height: 15)) // create a square
         square.position = CGPoint(x: size.width / 2, y: size.height - 15) // give it a position at the top
         addChild(square) // add child to the scene
         
         for row in 0..<5 { // for loop for instantiating the rows of circles
-            let rowY = size.height - topMargin - CGFloat(row * 100)
+            let rowY = size.height - topMargin - CGFloat(row * 150)
             let moveLeft = row % 2 == 0 // this piece determines whether the row will be moving left or right
             
             for i in 0..<10 { // for loop for the circles now
@@ -85,55 +85,65 @@ class MovingCirclesScene: SKScene, ObservableObject { //SKScene for SpriteKit sc
     }
     
     func createAndMoveCircle(rowY: CGFloat, column: Int, moveLeft: Bool, circleType: CircleType) { // create the circles and let them move
-        
-        let circle = SKShapeNode(circleOfRadius: 20)
-        
-        let initialXPosition: CGFloat
-        
-        if moveLeft {
-            initialXPosition = size.width + CGFloat(column * 150)
-        } else {
-            initialXPosition = -CGFloat(column * 150)
-        }
-        
-        circle.position = CGPoint(x: initialXPosition, y: rowY)
-        circle.fillColor = UIColor(circleType.color)
-        circle.fillTexture = SKTexture(imageNamed: circleType.image)
-        
-        addChild(circle)
-        //setup ^^
-        
-        let moveDistance: CGFloat
-        
-        if moveLeft {
-            moveDistance = -size.width - CGFloat(10 * 150) //if moveleft is true then actually move it left
-        } else {
-            moveDistance = size.width + CGFloat(10 * 150) // or move right
-        }
-        
-        let moveDuration = 4.0 // how fast they go
-        
-        let moveAction = SKAction.sequence([ //makes them actually move
-            SKAction.moveBy(x: moveDistance, y: 0, duration: moveDuration),
-            SKAction.run { [weak self] in // i decided to do weak self here because i feel like otherwise there may be memory issues with how many
-                if let scene = self {
-                    let defaultXPosition: CGFloat
-                    if moveLeft {
-                        defaultXPosition = scene.size.width + CGFloat(column * 150)
-                    } else {
-                        defaultXPosition = -CGFloat(column * 150)
-                    }
-                    circle.position.x = defaultXPosition
-                }
+            
+            let circle = SKShapeNode(circleOfRadius: 20)
+            
+            let initialXPosition: CGFloat
+            
+            if moveLeft {
+                initialXPosition = size.width + CGFloat(column * 150)
+            } else {
+                initialXPosition = -CGFloat(column * 150)
             }
-                                           ])
+            
+            circle.position = CGPoint(x: initialXPosition, y: rowY)
+            circle.fillColor = UIColor(.white)
         
-        let repeatAction = SKAction.repeatForever(moveAction)
-        circle.run(repeatAction)
-        
-        let gameCircle = GameCircle(type: circleType)
-        circles.append(gameCircle) // we have to keep track of the circles or else we cannot remove them so push them to an array
-    }
+            switch circleType {
+            case .type1:
+                circle.fillTexture = SKTexture(imageNamed: "yarnball1")
+            case .type2:
+                circle.fillTexture = SKTexture(imageNamed: "yarnball2")
+            case .type3:
+                circle.fillTexture = SKTexture(imageNamed: "yarnball3")
+            case .type4:
+                circle.fillTexture = SKTexture(imageNamed: "yarnball4")
+            }
+            
+            addChild(circle)
+            //setup ^^
+            
+            let moveDistance: CGFloat
+            
+            if moveLeft {
+                moveDistance = -size.width - CGFloat(10 * 150) //if moveleft is true then actually move it left
+            } else {
+                moveDistance = size.width + CGFloat(10 * 150) // or move right
+            }
+            
+            let moveDuration = 4.0 // how fast they go
+            
+            let moveAction = SKAction.sequence([ //makes them actually move
+                SKAction.moveBy(x: moveDistance, y: 0, duration: moveDuration),
+                SKAction.run { [weak self] in // i decided to do weak self here because i feel like otherwise there may be memory issues with how many
+                    if let scene = self {
+                        let defaultXPosition: CGFloat
+                        if moveLeft {
+                            defaultXPosition = scene.size.width + CGFloat(column * 150)
+                        } else {
+                            defaultXPosition = -CGFloat(column * 150)
+                        }
+                        circle.position.x = defaultXPosition
+                    }
+                }
+                                               ])
+            
+            let repeatAction = SKAction.repeatForever(moveAction)
+            circle.run(repeatAction)
+            
+            let gameCircle = GameCircle(type: circleType)
+            circles.append(gameCircle) // we have to keep track of the circles or else we cannot remove them so push them to an array
+        }
     
     func updateScore(for circleType: GameCircle) {
         let circleScore = circleType.score
