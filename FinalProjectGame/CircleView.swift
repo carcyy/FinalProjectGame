@@ -52,8 +52,9 @@ class MovingCirclesScene: SKScene, ObservableObject { //SKScene for SpriteKit sc
         
         let topMargin: CGFloat = 200 // some space between the shot and the circles
         
-        square = SKSpriteNode(color: .black, size: CGSize(width: 15, height: 15)) // create a square
+        square = SKSpriteNode(color: .white, size: CGSize(width: 30, height: 60)) // create a square
         square.position = CGPoint(x: size.width / 2, y: size.height - 15) // give it a position at the top
+        square.texture = SKTexture(imageNamed: "catpawupdated")
         addChild(square) // add child to the scene
         
         for row in 0..<5 { // for loop for instantiating the rows of circles

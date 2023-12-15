@@ -32,98 +32,111 @@ struct NavBar3: View {
     var body: some View {
         VStack {
             if isNavBarVisible == 1 { // ---------------
-                VStack {
-                    Text("Score: \(viewModel.score)")
-                        .foregroundColor(Color("ColorPink"))
-                        .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
-                        .background(Color.white)
-                        .cornerRadius(10)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color("ColorPink"), lineWidth: 5)
-                        )
-                    
-                    LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 5), count: viewModel.gameBoard.isEmpty ? 0 : viewModel.gameBoard[0].count), spacing: 5) {
-                        ForEach(viewModel.gameBoard.indices, id: \.self) { rowIndex in
-                            ForEach(viewModel.gameBoard[rowIndex].indices, id: \.self) { columnIndex in
-                                CellView(piece: $viewModel.gameBoard[rowIndex][columnIndex], viewModel: viewModel)
-                                    .id(UUID())
+                ZStack{
+                    Color("ColorBack").ignoresSafeArea()
+                    VStack {
+                        Text("Score: \(viewModel.score)")
+                            .foregroundColor(Color("ColorPink"))
+                            .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+                            .background(Color.white)
+                            .cornerRadius(10)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color("ColorPink"), lineWidth: 5)
+                            )
+                        
+                        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 5), count: viewModel.gameBoard.isEmpty ? 0 : viewModel.gameBoard[0].count), spacing: 5) {
+                            ForEach(viewModel.gameBoard.indices, id: \.self) { rowIndex in
+                                ForEach(viewModel.gameBoard[rowIndex].indices, id: \.self) { columnIndex in
+                                    CellView(piece: $viewModel.gameBoard[rowIndex][columnIndex], viewModel: viewModel)
+                                        .id(UUID())
+                                }
                             }
                         }
+                        .padding(10)
+                        .background(Color("ColorBack"))
+                        .ignoresSafeArea()
+                        
+                        Text("Time Remaining: \(timerSeconds) seconds")
+                            .foregroundColor(.white)
+                            .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+                            .background(timerSeconds > 0 ? Color.teal : Color("ColorPink"))
+                            .cornerRadius(10)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color.white, lineWidth: 5)
+                            )
                     }
-                    .padding(10)
-                    
-                    Text("Time Remaining: \(timerSeconds) seconds")
-                        .foregroundColor(.white)
-                        .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
-                        .background(timerSeconds > 0 ? Color.teal : Color("ColorPink"))
-                        .cornerRadius(10)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color.white, lineWidth: 5)
-                        )
+                    .background(Color("ColorBack"))
+                    .ignoresSafeArea()
                 }
-            } else if isNavBarVisible == 2 { // ------------
-                VStack {
-                    Text("Score: \(viewModel2.scene.score)")
-                        .foregroundColor(Color("ColorPink"))
-                        .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
-                        .background(Color.white)
-                        .cornerRadius(10)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color("ColorPink"), lineWidth: 5)
-                        )
                     
-                    GeometryReader { geometry in
-                        SpriteView(scene: {
-                            viewModel2.scene.size = CGSize(width: geometry.size.width + 350, height: geometry.size.height + 450)
-                            viewModel2.scene.scaleMode = .fill
-                            return viewModel2.scene
-                        }())
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .aspectRatio(contentMode: .fit)
-                        //.padding(50)
+                } else if isNavBarVisible == 2 { // ------------
+                    VStack(spacing: 10) {
+                        Spacer(minLength: 10)
+                        Text("Score: \(viewModel2.scene.score)")
+                            .foregroundColor(Color("ColorPink"))
+                            .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+                            .background(Color.white)
+                            .cornerRadius(10)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color("ColorPink"), lineWidth: 5)
+                            )
+                        
+                        Spacer(minLength: 10 )
+                        GeometryReader { geometry in
+                            SpriteView(scene: {
+                                viewModel2.scene.size = CGSize(width: geometry.size.width + 350, height: geometry.size.height + 450)
+                                viewModel2.scene.scaleMode = .fill
+                                return viewModel2.scene
+                            }())
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .aspectRatio(contentMode: .fit)
+                            .padding(10)
+                        }
+                        
+                        
+                        Text("Time Remaining: \(timerSeconds) seconds")
+                            .foregroundColor(.white)
+                            .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+                            .background(timerSeconds > 0 ? Color.teal : Color("ColorPink"))
+                            .cornerRadius(10)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color.white, lineWidth: 5)
+                            )
+                        Spacer(minLength: 10)
                     }
+                    .background(Color("ColorBack"))
+                    .ignoresSafeArea()
                     
-                    
-                    Text("Time Remaining: \(timerSeconds) seconds")
-                        .foregroundColor(.white)
-                        .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
-                        .background(timerSeconds > 0 ? Color.teal : Color("ColorPink"))
-                        .cornerRadius(10)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color.white, lineWidth: 5)
-                        )
                 }
-                .background(Color("ColorBack"))
             }
-        }
-        .onAppear {
-            startTimer()
-        }
-        .onDisappear {
-            timer?.invalidate()
-            timer = nil
-        }
-        //.fullScreenCover(isPresented: $isMenuViewPresented) {
+                .onAppear {
+                    startTimer()
+                }
+                .onDisappear {
+                    timer?.invalidate()
+                    timer = nil
+                }
+            //.fullScreenCover(isPresented: $isMenuViewPresented) {
             //NavigationView {
             //MenuView()
             //}
-        //}
-        .alert("Enter Highscore Details:", isPresented: $showingAlert) {
-            VStack {
-                TextField("Enter your name:", text: $name)
+            //}
+                .alert("Enter Highscore Details:", isPresented: $showingAlert)
+            {
+                VStack {
+                    TextField("Enter your name:", text: $name)
+                    Button("OK") {
+                            submit()
+                            self.presentationMode.wrappedValue.dismiss()
+                    }
+                    //.disabled(name.isEmpty) i wish this would work but it breaks everything :(
+                }
             }
-
-            Button("OK", action: {
-                submit()
-                self.presentationMode.wrappedValue.dismiss()
-            })
-            .disabled(name.isEmpty)
         }
-    }
         
     public func dateCheck() -> String {
         let currentDate = Date()
