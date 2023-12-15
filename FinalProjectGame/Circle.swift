@@ -11,12 +11,14 @@ struct GameCircle: Equatable {
     let color: Color
     let type: CircleType
     let score: Int
+    let image: Image
     
     
     init(type: CircleType) {
         self.type = type
         self.color = type.color
         self.score = type.score
+        self.image = type.image
     }
 }
 
@@ -34,6 +36,15 @@ enum CircleType {
         case .type3: return Color.blue
         case .type4: return Color.yellow
         //case .none: return Color.clear
+        }
+    }
+    
+    var image: Image {
+        switch self {
+        case .type1: return Image("yarnball1")
+        case .type2: return Image("yarnball2")
+        case .type3: return Image("yarnball3")
+        case .type4: return Image("yarnball4")
         }
     }
     

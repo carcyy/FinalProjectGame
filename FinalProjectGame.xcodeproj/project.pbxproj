@@ -46,7 +46,7 @@
 		8E29236F2AFD9C1A002C22CC /* CircleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleView.swift; sourceTree = "<group>"; };
 		8E2923752AFD9DEF002C22CC /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		8E2923772AFEF09E002C22CC /* NavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBar.swift; sourceTree = "<group>"; };
-		8E5535D72AEAF41300CF0C3A /* FinalProjectGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FinalProjectGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8E5535D72AEAF41300CF0C3A /* Purrfect Pair.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Purrfect Pair.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E5535DA2AEAF41300CF0C3A /* FinalProjectGameApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinalProjectGameApp.swift; sourceTree = "<group>"; };
 		8E5535DC2AEAF41300CF0C3A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		8E5535DE2AEAF41400CF0C3A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -101,7 +101,7 @@
 		8E5535D82AEAF41300CF0C3A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8E5535D72AEAF41300CF0C3A /* FinalProjectGame.app */,
+				8E5535D72AEAF41300CF0C3A /* Purrfect Pair.app */,
 				8E5535E82AEAF41400CF0C3A /* FinalProjectGameTests.xctest */,
 				8E5535F22AEAF41400CF0C3A /* FinalProjectGameUITests.xctest */,
 			);
@@ -170,7 +170,7 @@
 			);
 			name = FinalProjectGame;
 			productName = FinalProjectGame;
-			productReference = 8E5535D72AEAF41300CF0C3A /* FinalProjectGame.app */;
+			productReference = 8E5535D72AEAF41300CF0C3A /* Purrfect Pair.app */;
 			productType = "com.apple.product-type.application";
 		};
 		8E5535E72AEAF41400CF0C3A /* FinalProjectGameTests */ = {
@@ -472,7 +472,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 13.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.CUBCH.FinalProjectGame;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Purrfect Pair";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -510,7 +510,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 13.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.CUBCH.FinalProjectGame;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Purrfect Pair";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = YES;

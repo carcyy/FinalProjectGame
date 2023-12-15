@@ -13,7 +13,12 @@ struct CellView: View {
 //where all the logic 
     var body: some View {
         RoundedRectangle(cornerRadius: 3)
-            .fill(piece.color)
+            .fill(Color.clear) //piece.color
+            .overlay(
+                piece.image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            )
             .aspectRatio(1.0, contentMode: .fit)
             .padding(5)
             .onTapGesture { // when you tap you need apply the logic of selection, moving, swapping, etc.
@@ -37,6 +42,6 @@ struct CellView: View {
                     viewModel.selectedPiece = piece // otherwise there is a piece
                 }
             }
-            .border(viewModel.selectedPiece?.id == piece.id ? Color.blue : Color.clear, width: 2) // give it a border to see which one you've selected 
+            .border(viewModel.selectedPiece?.id == piece.id ? Color.black : Color.clear, width: 2) // give it a border to see which one you've selected
     }
 }

@@ -10,6 +10,7 @@ import SwiftUI
 struct Piece: Identifiable, Equatable {
     let id: UUID
     let color: Color
+    let image: Image
     let type: PieceType
     let score: Int
     var hasPowerUp: Bool
@@ -18,6 +19,7 @@ struct Piece: Identifiable, Equatable {
         self.id = id
         self.type = type
         self.color = type.color
+        self.image = type.image
         self.score = type.score
         self.hasPowerUp = type.hasPowerUp
     }
@@ -35,6 +37,15 @@ enum PieceType {
         case .type2: return Color.green
         case .type3: return Color.blue
         case .none: return Color.clear
+        }
+    }
+    
+    var image: Image {
+        switch self {
+        case .type1: return Image("yarnball1")
+        case .type2: return Image("yarnball2")
+        case .type3: return Image("yarnball3")
+        case .none: return Image("empty")
         }
     }
     

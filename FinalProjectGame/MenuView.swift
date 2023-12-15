@@ -17,8 +17,12 @@ struct MenuView: View {
     var body: some View {
         VStack {
             if !isMenuVisible && selectedLevel == nil{
-                Text("Carson's Game WIP")
-                    .font(.system(size: 30))
+                Text("Purrfect Pair")
+                    .font(.system(size: 65, weight: .bold))
+                    .foregroundColor(Color.teal)
+                    .background(Color.white)
+                    .cornerRadius(10)
+                
                 
                 NavigationStack {
                     VStack {
@@ -29,15 +33,21 @@ struct MenuView: View {
                                 if (x == 1)
                                 {
                                     Text("Match 3+")
-                                        .font(.title)
+                                        .font(.title2)
                                         .fontWeight(.bold)
+                                        .foregroundColor(.white)
                                         .padding()
+                                        .background(Color("ColorPink"))
+                                        .cornerRadius(10)
                                 }
                                 else {
                                     Text("Ball Drop")
-                                        .font(.title)
+                                        .font(.title2)
                                         .fontWeight(.bold)
                                         .padding()
+                                        .foregroundColor(.white)
+                                        .background(Color("ColorPurple"))
+                                        .cornerRadius(10)
                                 }
                             })
                         }
@@ -49,14 +59,14 @@ struct MenuView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .navigationViewStyle(StackNavigationViewStyle())
                 .padding()
-                
+                .background(Color.teal)
                 
                 Button("Highscores") {
                     isStoreVisible.toggle()
                 }
                 .foregroundColor(.white)
                 .padding()
-                .background(Color.blue)
+                .background(Color.teal)
                 .cornerRadius(10)
                 .sheet(isPresented: $isStoreVisible) {
                     StoreView()
@@ -74,39 +84,47 @@ struct StoreView: View {
     @State private var game2Visibility = false
     
     var body: some View {
-        VStack {
-            Text("Highscores")
-                .font(.title)
-                .fontWeight(.bold)
-                .padding()
-            
-            Button("Match 3+ Highscore List") {
-                game1Visibility = true
-                game2Visibility = false
-            }
-            .foregroundColor(.white)
-            .padding()
-            .background(Color.purple)
-            .cornerRadius(10)
-            Button("Ball Drop Highscore List") {
-                game2Visibility = true
-                game1Visibility = false
-            }
-            .foregroundColor(.white)
-            .padding()
-            .background(Color.teal)
-            .cornerRadius(10)
-            
-            if(game1Visibility == true && game2Visibility == false) // if in reference to game 1, display game 1 scores
-            {
-                List(viewModel.scores, id: \.self) { scoreData in
-                    Text("User: \(scoreData.playerName), Score: \(scoreData.score), Date: \(scoreData.scoreDate)")
+        ZStack{
+            Color("ColorBack").ignoresSafeArea()
+        
+            VStack {
+                Text("Highscores")
+                    .font(.system(size: 50, weight: .bold))
+                    .foregroundColor(Color.teal)
+                    .background(Color.white)
+                    .cornerRadius(10)
+                    .padding(5)
+                
+                Spacer(minLength: 25)
+                
+                Button("Match 3+ Highscore List") {
+                    game1Visibility = true
+                    game2Visibility = false
                 }
-            }
-            else if(game2Visibility == true && game1Visibility == false) // if in reference to game 2, display game 2 scores
-            {
-                List(viewModel2.scene.scores2, id: \.self) { scoreData2 in
-                    Text("User: \(scoreData2.playerName), Score: \(scoreData2.score), Date: \(scoreData2.scoreDate)")
+                .foregroundColor(.white)
+                .padding()
+                .background(Color("ColorPurple"))
+                .cornerRadius(10)
+                Button("Ball Drop Highscore List") {
+                    game2Visibility = true
+                    game1Visibility = false
+                }
+                .foregroundColor(.white)
+                .padding()
+                .background(Color("ColorPink"))
+                .cornerRadius(10)
+                
+                if(game1Visibility == true && game2Visibility == false) // if in reference to game 1, display game 1 scores
+                {
+                    List(viewModel.scores, id: \.self) { scoreData in
+                        Text("User: \(scoreData.playerName), Score: \(scoreData.score), Date: \(scoreData.scoreDate)")
+                    }
+                }
+                else if(game2Visibility == true && game1Visibility == false) // if in reference to game 2, display game 2 scores
+                {
+                    List(viewModel2.scene.scores2, id: \.self) { scoreData2 in
+                        Text("User: \(scoreData2.playerName), Score: \(scoreData2.score), Date: \(scoreData2.scoreDate)")
+                    }
                 }
             }
         }

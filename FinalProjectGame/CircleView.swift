@@ -98,6 +98,7 @@ class MovingCirclesScene: SKScene, ObservableObject { //SKScene for SpriteKit sc
         
         circle.position = CGPoint(x: initialXPosition, y: rowY)
         circle.fillColor = UIColor(circleType.color)
+        circle.fillTexture = SKTexture(imageNamed: circleType.image)
         
         addChild(circle)
         //setup ^^
